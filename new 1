@@ -1,0 +1,151 @@
+import psycopg2
+import pandas as pd
+from sqlalchemy import create_engine
+
+engine = create_engine('postgresql+psycopg2://postgres:Tpotrm1boas#@localhost:5432/test', 
+                      paramstyle="format")
+
+conn = psycopg2.connect("dbname=test user=postgres password=Tpotrm1boas#")
+----------------------------------------------------------
+C:\Users\09866850\AppData\Local\Continuum\anaconda3\python.exe C:\Users\09866850\Python_Scripts\savings.py
+----------------------------------------------------------
+$#.##,," M";
+----------------------------------------------------------
+from command prompt (not python console)
+pip install C:\Users\09866850\Downloads\psycopg2-2.8.4-cp37-cp37m-win_amd64.whl
+----------------------------------------------------------
+Jason Sienkiewicz | Procurement Support Officer
+Procurement Division
+Department of Education and Training
+Level 6, 35 Collins Street, Melbourne VIC 3000
+03 7022 2483
+Sienkiewicz.Jason.J@edumail.vic.gov.au
+----------------------------------------------------------
+import sys
+sys.path.append(r'C:\Users\09866850\Python Notebooks')
+import ariba_sources
+ariba_sources.group_manager_mapper
+----------------------------------------------------------
+# Direct Negotiation = Single Source
+----------------------------------------------------------
+for each x in selection.cells: x.NumberFormat = "General": x.value = x.value: next
+----------------------------------------------------------
+for each x in selection.cells: x.NumberFormat = "General": x.value = TRIM(x.value): next
+----------------------------------------------------------
+save_df = .reset_index()
+clippy_filename = r'C:\Users\09866850\OneDrive - VIC - Department of Education and Training\Desktop\clippy.xlsx'
+clippy_writer = pd.ExcelWriter(clippy_filename, 
+                               datetime_format='dd-mm-yyyy', 
+                               date_format='dd-mm-yyyy')
+workbook  = clippy_writer.book
+sheet_name = 'clippy'
+save_df.to_excel(clippy_writer, sheet_name, index=False)
+worksheet = clippy_writer.sheets[sheet_name]
+header_format = ariba_sources.DET_corporate_header(workbook)
+for col_num, value in enumerate(save_df.columns):
+	worksheet.write(0, col_num, value, header_format)
+worksheet.freeze_panes(1,0)
+worksheet.autofilter(0, 0, 0, save_df.shape[1]-1)
+clippy_writer.save()
+----------
+import numpy as np
+from datetime import date
+import datetime
+f_date = date(2019, 6, 29)
+l_date = datetime.date.today()
+delta = l_date - f_date
+delta
+----------
+https://portal.eduweb.vic.gov.au/collaboration/Procurement/CECM/CP%20Analysis%20and%20Reporting/_Reporting/Exec%20Monthly%20Contract%20Active%20Reports/FY_2019_2020%2008%20August/Monthly%20Contract%20Listings.xlsx
+----------
+https://edugate.eduweb.vic.gov.au/edrms/collaboration/PD/Administration/Training Feedback/Procurement Training Feedback - Data.xlsx
+
+https://edugate.eduweb.vic.gov.au/edrms/collaboration/PD/Administration/Training Feedback
+---
+select * from AP_INVOICES_ALL
+/
+--select * from ap_invoice_lines_all
+/
+--select * from GL_CODE_COMBINATIONS where segment3 = 3116
+/*
+select 
+ --ASCII_CHAR_CHECK(AAIA.INVOICE_NUM)                                                                               AS INVOICE_NUMBER, 
+ AAIA.INVOICE_NUM                                                                               AS INVOICE_NUMBER, 
+ to_char(AAIA.INVOICE_DATE,'dd/mm/yyyy')                                                        AS INVOICE_DATE, 
+ to_char(AABA.BATCH_DATE,'dd/mm/yyyy')                                                          AS BATCH_DATE, 
+  AABA.BATCH_NAME                                                                                AS BATCH_NAME, 
+  to_char(AAIA.CREATION_DATE,'dd/mm/yyyy')                                                       AS INVOICE_CREATION_DATE, 
+  to_char(AAIA.CANCELLED_DATE,'dd/mm/yyyy')                                                      AS CANCELLED_DATE, 
+  AIDA.PERIOD_NAME                                                                               AS PERIOD, 
+  AAPS.SEGMENT1                                                                                  AS VENDOR_NUMBER, 
+  AAPS.VENDOR_NAME                                                                               AS VENDOR_NAME, 
+  PPVSA.VENDOR_SITE_CODE                                                                         AS VENDOR_SITE_CODE, 
+  GLCC.SEGMENT1                                                                                  AS ENTITY, 
+  GLCC.SEGMENT2                                                                                  AS BUSINESS_UNIT, 
+  GLCC.SEGMENT3                                                                                  AS NATURAL_ACCOUNT, 
+  GLCC.SEGMENT4                                                                                  AS PROJECT, 
+  GLCC.SEGMENT5                                                                                  as SITE, 
+  --ASCII_CHAR_CHECK(AAIA.DESCRIPTION)                                                             AS INVOICE_DESCRIPTION, 
+  AAIA.DESCRIPTION                                                                               AS INVOICE_DESCRIPTION, 
+  AACA.CHECK_NUMBER                                                                              AS CHECK_NUMBER, 
+  to_char(AACA.CHECK_DATE,'dd/mm/yyyy')                                                          AS CHECK_DATE, 
+  to_char(AACA.VOID_DATE,'dd/mm/yyyy')                                                           AS VOID_DATE, 
+  DECODE(AAIA.PAYMENT_STATUS_FLAG, 'N','No', 'Y','Yes', 'P','Partial' ,AAIA.PAYMENT_STATUS_FLAG) AS PAYMENT_STATUS, 
+  AIDA.AMOUNT                                                                                    AS LINE_AMOUNT, 
+  AAIA.INVOICE_AMOUNT                                                                            AS INVOICE_AMOUNT, 
+  NVL(AAIA.AMOUNT_PAID,0)                                                                        AS AMOUNT_PAID, 
+  AAIPA.AMOUNT                                                                                   AS PAYMENT_AMOUNT,
+  (select SUM(id2.amount) 
+   from ap_invoice_distributions_all id2
+   where id2.invoice_id = AAIA.INVOICE_ID
+   and id2.line_type_lookup_code LIKE '%TAX%')                                                   AS TAX_AMOUNT,
+   PPVSA.vat_registration_num                                                                    AS ABN
+from AP_SUPPLIERS                                                                                AAPS 
+INNER JOIN AP_INVOICES_ALL                                                                       AAIA 
+ON AAPS.VENDOR_ID = AAIA.VENDOR_ID 
+INNER JOIN 
+  (SELECT SUM(id.AMOUNT) AMOUNT, 
+    id.PERIOD_NAME, 
+    id.INVOICE_ID, 
+    id.DIST_CODE_COMBINATION_ID, 
+    id.LINE_TYPE_LOOKUP_CODE 
+  FROM AP_INVOICE_DISTRIBUTIONS_ALL ID 
+  WHERE id.PERIOD_NAME IN (:PERIOD) 
+  GROUP BY id.PERIOD_NAME, 
+    id.INVOICE_ID, 
+    id.DIST_CODE_COMBINATION_ID, 
+    id.LINE_TYPE_LOOKUP_CODE 
+  )                                                                                              AIDA 
+on AAIA.INVOICE_ID = AIDA.INVOICE_ID 
+LEFT OUTER JOIN AP_TERMS_TL                                                                      AATT 
+on AAIA.TERMS_ID = AATT.TERM_ID 
+LEFT OUTER JOIN AP_BATCHES_ALL                                                                   AABA 
+ON AAIA.BATCH_ID = AABA.BATCH_ID 
+LEFT OUTER JOIN GL_CODE_COMBINATIONS                                                             GLCC 
+on AIDA.DIST_CODE_COMBINATION_ID = GLCC.CODE_COMBINATION_ID 
+LEFT OUTER JOIN AP_SUPPLIER_SITES_ALL                                                            PPVSA 
+ON AAIA.VENDOR_SITE_ID = PPVSA.VENDOR_SITE_ID 
+LEFT OUTER JOIN 
+  (SELECT SUM(AIP.AMOUNT) AMOUNT, 
+    AIP.INVOICE_ID, 
+    AIP.CHECK_ID, 
+    AIP.CREATION_DATE, 
+    AIP.ACCOUNTING_DATE 
+  FROM AP_INVOICE_PAYMENTS_ALL AIP  
+  WHERE AIP.PERIOD_NAME IN (:PERIOD) 
+  GROUP BY AIP.INVOICE_ID, 
+    AIP.CHECK_ID, 
+    AIP.CREATION_DATE, 
+    AIP.ACCOUNTING_DATE 
+  )                                                                                              AAIPA 
+on AAIA.INVOICE_ID = AAIPA.INVOICE_ID 
+LEFT OUTER JOIN AP_CHECKS_ALL                                                                    AACA 
+ON AAIPA.CHECK_ID = AACA.CHECK_ID 
+--WHERE AAIA.INVOICE_NUM='I.0006148754';
+where AIDA.PERIOD_NAME in (:PERIOD) 
+and (AAIA.PAYMENT_STATUS_FLAG in (:PAYMENT_STATUS) or COALESCE(:PAYMENT_STATUS,'*')='*') 
+and (AAPS.VENDOR_NAME  like '%'||UPPER(:VENDOR_NAME)||'%'  or coalesce(:VENDOR_NAME,'*')='*') 
+and (AAPS.SEGMENT1=:VENDOR_NUMBER or COALESCE(:VENDOR_NUMBER,'*')='*') 
+order by AAIA.INVOICE_DATE desc
+*/
+select * from GL_CODE_COMBINATIONS
